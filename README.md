@@ -2,16 +2,15 @@
 
 1. DB:
  - Adresses table (selected: bool)
- - Coins 
-2. Trading history extraction. - save in db
-3. 
-3. Portfolio backtesting (vectorbt). - save in db
-4. DB analysis, visualisation, insights.
-5. FIlter the best. (label in db)
-6. Automate copy trading.
+LOOP
+2. Wallet data extraction.
+3. Wallet analysis.
+<!-- 3. Portfolio backtesting (vectorbt). - save in db -->
+4. Label in db validated.
+5. Automate copy trading.
 
-.:
- - Minimum 6 month (adjustable).
- - VectorBT analysis:
-   Sharpe ratio, win ratio, drawdown, etc... Adjustable
-3. 
+What wallet data can I extract?
+  - tsx history with dates, value, etc...
+
+With that info I can see at which price wallet bought a coin, and at which price sold.
+So, I can see his pnl on each trade.
