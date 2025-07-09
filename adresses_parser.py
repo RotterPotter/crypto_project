@@ -6,7 +6,7 @@ import models
 from sqlalchemy.orm import Session, sessionmaker
 
 def parse_etherscan_adresses(page:int = 1) -> List[str]:
-    url = f"https://etherscan.io/txs?p={page}&ps=100"
+    url = f"https://etherscan.io/txs?p={page}&ps=50"
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
