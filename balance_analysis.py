@@ -60,25 +60,42 @@ def take_all_wallets_transactions(wallet_address:str, chain_name:str, days_lookb
   stop_looking_date = datetime.now(tz=timezone.utc) - timedelta(days_lookback)
   all_transactions = []
   page = 1
+  run = True
 
-  while True:
+  while run:
     url = f"https://api.covalenthq.com/v1/{chain_name}/address/{wallet_address}/transactions_v3/page/{page}/"
     headers = {"Authorization": f"Bearer {os.getenv("GOLDRUSH_API_KEY")}"}
     response = requests.request("GET", url, headers=headers)
     transactions = response.json()["data"]["items"]
 
+    if len(transactions) < 1 or parser.parse(transactions[0]["block_signed_at"]) < stop_looking_date:
+      run = False
+
     for transaction in transactions:
       # TODO add re-orged block checker. "Get block heights" endpoint + custom mapping block height:hash
       # check sender/receiver hashes.
-      # time, sender/receiver, token_address, value, 
-      block_signed_at = parser.parse(transaction["block_signed_at"])
-      sender_address = transaction["log_events"]
-      receive_address = transaction["log_events"]
-      token_address = transaction["log_events"]
-      value = transaction["value"]
+      # time, sender/receiver, value
+      if transaction.get("log_events", None) is None:
+        continue
 
-    if len(transactions) < 1 or parser.parse(transactions[-1]["block_signed_at"]) < stop_looking_date:
-      break
+      block_signed_at = parser.parse(transaction["block_signed_at"])
+      if block_signed_at < stop_looking_date:
+        run = False
+        break
+      
+      for log_event in transaction["log_events"]:
+        from_address = log_event
+        to_address = log_event
+        value = log_event
+
+        all_transactions.append({
+          "block_signed_at": block_signed_at,
+          "from_address": from_address,
+          "to_address": to_address,
+          "value": value
+
+        })
+
 
     page += 1
 
