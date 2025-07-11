@@ -10,18 +10,9 @@ from typing import List, Optional
 import json
 from datetime import datetime, timedelta
 
-
-if __name__ == "__main__":
-  # db session
-  engine = create_engine("sqlite:///mydb.sqlite", echo=True)
-  session_ = sessionmaker(bind=engine)
-  session = session_()
-  models.Base.metadata.create_all(engine)
-
-  wallets = session.query(models.Wallet).all()
-
+def filter_wallets_in_db_by_time(db_session: Session, days_lookback:int):
+  wallets = db_session.query(models.Wallet).all()
   for wallet in wallets:
-    if datetime.now(tz=timezone.utc)  <  wallet.earliest_tsx.astimezone(timezone.utc) + timedelta(days=90):
-      session.delete(wallet)
-
-  session.commit()
+    if datetime.now(tz=timezone.utc)  <  wallet.earliest_tsx.astimezone(timezone.utc) + timedelta(days=days_lookback):
+      db_session.delete(wallet)
+  db_session.commit()

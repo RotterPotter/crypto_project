@@ -6,7 +6,7 @@ import models
 from sqlalchemy.orm import Session, sessionmaker
 
 def parse_etherscan_adresses(page:int = 1) -> List[str]:
-    url = f"https://etherscan.io/txs?p={page}&ps=50"
+    url = f"https://etherscan.io/txs?p={page}&ps=25"
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
@@ -45,10 +45,13 @@ def update_db(adresses: List[str], db_session: Session):
             
     db_session.commit()
 
+def parse_etherscan_adresses_and_update_db(db_session: Session, page:int = 1):
+    adresses = parse_etherscan_adresses(page=page)
+    update_db(adresses, db_session)
+
 if __name__ == "__main__":
     engine = create_engine("sqlite:///mydb.sqlite", echo=True)
     session_ = sessionmaker(bind=engine)
     session = session_()
     models.Base.metadata.create_all(engine)
-    adresses = parse_etherscan_adresses(page=1)
-    update_db(adresses, session)
+    parse_etherscan_adresses_and_update_db(session, page=1)

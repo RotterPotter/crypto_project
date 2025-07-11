@@ -1,0 +1,40 @@
+---
+alwaysApply: true
+---
+
+# Goldrush API Documentation Reference
+
+When working with API endpoints, especially those related to blockchain data, cryptocurrency analysis, or portfolio tracking, always reference the **Goldrush API Documentation** as the primary source of information.
+
+## Key Guidelines:
+
+1. **API Endpoint Questions**: When users ask about API endpoints, parameters, response formats, or integration details, refer to the official Goldrush API documentation first.
+
+2. **Covalent API Integration**: The Goldrush API appears to be based on or related to Covalent's blockchain data API. Use Covalent's documentation as a reference for:
+   - Portfolio endpoints (`/portfolio_v2/`)
+   - Transfer endpoints (`/transfers_v2/`)
+   - Block data endpoints (`/block_v2/`)
+   - Authentication methods
+   - Rate limiting and pagination
+
+3. **Common Endpoints to Reference**:
+   - Portfolio analysis: `/{chain}/address/{address}/portfolio_v2/`
+   - Token transfers: `/{chain}/address/{address}/transfers_v2/`
+   - Block information: `/{chain}/block_v2/{block_height}/`
+
+4. **Documentation Priority**: When providing API-related guidance:
+   - First: Check official Goldrush/Covalent API documentation
+   - Second: Reference existing code examples in the codebase
+   - Third: Provide general best practices for API integration
+
+5. **Code Examples**: When showing API usage examples, ensure they align with the current implementation patterns seen in the development notebook, such as proper authentication headers and parameter formatting.
+
+## Current Implementation Context:
+Based on the development notebook, the project uses:
+- Bearer token authentication
+- EUR as quote currency
+- Pagination handling for large datasets
+- Error handling with retry logic
+- VectorBT for portfolio backtesting
+
+Always verify any API suggestions against the official documentation to ensure accuracy and current best practices.

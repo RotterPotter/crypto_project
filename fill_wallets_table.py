@@ -30,29 +30,6 @@ def add_earliest_tsx_dt_in_db(transaction_summary: dict, adress, db_session: Ses
   if wallet_in_db.earliest_tsx is None or dt < wallet_in_db.earliest_tsx.astimezone(timezone.utc):
     wallet_in_db.earliest_tsx = dt
 
-def fetch_all_transactions(adress:str) -> List[Optional[dict]]:
-
-  transactions_to_return = []
-  page = 0
-
-  while True:
-    url = f"https://api.covalenthq.com/v1/eth-mainnet/address/{adress}/transactions_v3/page/{page}/"
-
-    headers = {"Authorization": f"Bearer {os.getenv('GOLDRUSH_API_KEY')}"}
-
-    response = requests.request("GET", url, headers=headers)
-    data = response.json()
-
-    transactions = data["data"]["items"]
-
-    if len(transactions) < 1:
-      break
-    else:
-      transactions_to_return += transactions
-
-    page += 1
-
-  return transactions_to_return
 
 def fetch_used_chains(wallet_address:str) -> List[Optional[dict]]:
 
@@ -82,12 +59,12 @@ def fill_data(adress:str, db_session: Session) -> bool:
       continue
     add_earliest_tsx_dt_in_db(transactions_summary, adress, db_session)
 
-
-  # all_transactions = fetch_all_transactions(adress)
-  # with open("test.json", "w") as fp:
-  #   json.dump(all_transactions, fp)
-  # transformed_transactions = transform_transactions(adress, all_transactions)
-  # print(transform_transactions)
+def fill_earliest_tsx_dt_in_db(db_session: Session):
+  for wallet in db_session.query(models.Wallet).all():
+    print("Filling earliest tsx dt in db for wallet:", wallet.adress)
+    if wallet.earliest_tsx is None:
+      fill_data(wallet.adress, db_session)
+  db_session.commit()
 
 if __name__ == "__main__":
   # db session
